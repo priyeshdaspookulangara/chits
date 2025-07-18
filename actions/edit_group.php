@@ -17,11 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $duration_months = $_POST['duration_months'];
     $num_members = $_POST['num_members'];
     $status = $_POST['status'];
+    $foreman_commission_rate = $_POST['foreman_commission_rate'];
     $monthly_contribution = $total_chit_amount / $duration_months;
 
-    $sql = "UPDATE chit_groups SET name = ?, total_chit_amount = ?, duration_months = ?, monthly_contribution = ?, num_members = ?, status = ? WHERE id = ?";
+    $sql = "UPDATE chit_groups SET name = ?, total_chit_amount = ?, duration_months = ?, monthly_contribution = ?, num_members = ?, status = ?, foreman_commission_rate = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sdiidsi", $name, $total_chit_amount, $duration_months, $monthly_contribution, $num_members, $status, $group_id);
+    $stmt->bind_param("sdiidsdi", $name, $total_chit_amount, $duration_months, $monthly_contribution, $num_members, $status, $foreman_commission_rate, $group_id);
 
     if ($stmt->execute()) {
         header("Location: ../groups.php");
@@ -64,6 +65,9 @@ $group = $result->fetch_assoc();
         <option value="active" <?php if ($group['status'] == 'active') echo 'selected'; ?>>Active</option>
         <option value="completed" <?php if ($group['status'] == 'completed') echo 'selected'; ?>>Completed</option>
     </select>
+    <br>
+    <label for="foreman_commission_rate">Foreman Commission Rate (%):</label>
+    <input type="number" id="foreman_commission_rate" name="foreman_commission_rate" step="0.01" value="<?php echo $group['foreman_commission_rate']; ?>" required>
     <br>
     <input type="submit" value="Update Group">
 </form>

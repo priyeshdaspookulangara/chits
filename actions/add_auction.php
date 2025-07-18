@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $winning_bid_amount = $_POST['winning_bid_amount'];
 
     // Get group details
-    $sql = "SELECT total_chit_amount, num_members, monthly_contribution FROM chit_groups WHERE id = ?";
+    $sql = "SELECT total_chit_amount, num_members, monthly_contribution, foreman_commission_rate FROM chit_groups WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $chit_group_id);
     $stmt->execute();
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $gross_chit_amount = $group['monthly_contribution'] * $group['num_members'];
     $discount_offered = $gross_chit_amount - $winning_bid_amount;
-    $foreman_commission = $group['total_chit_amount'] * 0.05;
+    $foreman_commission = $group['total_chit_amount'] * ($group['foreman_commission_rate'] / 100);
     $net_auction_profit = $discount_offered - $foreman_commission;
     $dividend_per_member = $net_auction_profit / $group['num_members'];
 

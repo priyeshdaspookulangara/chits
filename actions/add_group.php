@@ -14,11 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_chit_amount = $_POST['total_chit_amount'];
     $duration_months = $_POST['duration_months'];
     $num_members = $_POST['num_members'];
+    $foreman_commission_rate = $_POST['foreman_commission_rate'];
     $monthly_contribution = $total_chit_amount / $duration_months;
 
-    $sql = "INSERT INTO chit_groups (name, total_chit_amount, duration_months, monthly_contribution, num_members) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO chit_groups (name, total_chit_amount, duration_months, monthly_contribution, num_members, foreman_commission_rate) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sdiid", $name, $total_chit_amount, $duration_months, $monthly_contribution, $num_members);
+    $stmt->bind_param("sdiidd", $name, $total_chit_amount, $duration_months, $monthly_contribution, $num_members, $foreman_commission_rate);
 
     if ($stmt->execute()) {
         header("Location: ../groups.php");
@@ -47,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <br>
     <label for="num_members">Number of Members:</label>
     <input type="number" id="num_members" name="num_members" required>
+    <br>
+    <label for="foreman_commission_rate">Foreman Commission Rate (%):</label>
+    <input type="number" id="foreman_commission_rate" name="foreman_commission_rate" step="0.01" value="5.00" required>
     <br>
     <input type="submit" value="Add Group">
 </form>
